@@ -13,5 +13,22 @@ namespace FitnessClub
     /// </summary>
     public partial class App : Application
     {
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+
+            var loginWindow = new LoginWindow();
+            bool? result = loginWindow.ShowDialog();
+
+            if (result == true) // Jeśli logowanie się powiodło
+            {
+                var mainWindow = new MainWindow();
+                mainWindow.Show(); // Wyświetl główne okno aplikacji
+            }
+            else
+            {
+                Shutdown(); // Zamknij aplikację, jeśli logowanie się nie powiodło lub zostało anulowane
+            }
+        }
     }
 }

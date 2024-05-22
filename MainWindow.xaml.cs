@@ -24,5 +24,18 @@ namespace FitnessClub
         {
             InitializeComponent();
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var dbHelper = new DatabaseConnection();
+            try
+            {
+                dbHelper.ConnectAndExecuteQuery();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Wystąpił błąd podczas łączenia z bazą danych: {ex.Message}");
+            }
+        }
     }
 }

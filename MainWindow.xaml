@@ -67,5 +67,54 @@
                 </DataGrid>
             </Grid>
         </TabItem>
+        <TabItem x:Name="Warehouse" Header="Warehouse">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Formularz dodawania nowego produktu -->
+                <StackPanel Grid.Row="0" Margin="10">
+                    <TextBlock Text="Add New Product" FontWeight="Bold" FontSize="16" Margin="0,0,0,10" HorizontalAlignment="Center"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Product Name:" Margin="0,0,10,0"/>
+                        <TextBox x:Name="NewProductNameTextBox" Width="150" Margin="0,0,10,0"/>
+                        <TextBlock Text="Quantity:" Margin="0,0,10,0"/>
+                        <TextBox x:Name="NewProductQuantityTextBox" Width="50"/>
+                        <TextBlock Text="Price:" Margin="10,0,10,0"/>
+                        <TextBox x:Name="NewProductPriceTextBox" Width="50"/>
+                        <Button Content="Add Product" Click="AddProductButton_Click" Margin="10,0,0,0"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- DataGrid do wyświetlania produktów -->
+                <DataGrid x:Name="ProductDataGrid" Grid.Row="1" AutoGenerateColumns="False" Margin="10" MaxWidth="600" SelectionMode="Single" CanUserSortColumns="False"> 
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50" CanUserSort="True"/>
+                        <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*" CanUserSort="False"/>
+                        <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" Width="100" CanUserSort="True"/>
+                        <DataGridTextColumn Header="Price" Binding="{Binding Price}" Width="50" CanUserSort="True"/>
+                        <DataGridTemplateColumn Width="Auto">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="+" Click="AddQuantityButton_Click"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Width="Auto">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="-" Click="RemoveQuantityButton_Click"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </TabItem>
+        <TabItem x:Name="tbShop" Header="Shop">
+            
+        </TabItem>
     </TabControl>
 </Window>

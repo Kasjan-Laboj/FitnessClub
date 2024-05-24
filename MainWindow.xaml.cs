@@ -29,7 +29,7 @@ namespace FitnessClub
             InitializeComponent();
             dbConnection = new DatabaseConnection();
             LoadClients();
-
+            RefreshProductList();
         }
         private void LoadClients()
         {
@@ -62,13 +62,21 @@ namespace FitnessClub
             {
                 MessageBox.Show("Klient został dodany do bazy.");
                 ClearInputFields();
+                RefreshClientList();
             }
             else
             {
                 MessageBox.Show("Wystąpił błąd podczas dodawania klienta.");
             }
         }
+        private void RefreshClientList()
+        {
+            // Pobierz nową listę klientów z bazy danych
+            List<Client> clients = dbConnection.GetClients();
 
+            // Przypisz nową listę klientów do ItemsSource DataGrid
+            ClientDataGrid.ItemsSource = clients;
+        }
         private void PassLengthComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             CalculateEndDate();
@@ -119,6 +127,153 @@ namespace FitnessClub
             PassLengthComboBox.SelectedIndex = -1;
             PassPriceTextBox.Text = string.Empty;
             EndDateTextBlock.Text = string.Empty;
+        }
+
+        private void AddProductButton_Click(object sender, RoutedEventArgs e)
+        {
+            string productName = NewProductNameTextBox.Text;
+            int quantity;
+            decimal price;
+            if (!int.TryParse(NewProductQuantityTextBox.Text, out quantity))
+            {
+                MessageBox.Show("Quantity must be a valid integer.");
+                return;
+            }
+
+            if (!decimal.TryParse(NewProductPriceTextBox.Text, out price))
+            {
+                MessageBox.Show("Price must be a valid integer.");
+                return;
+            }
+
+            // Dodaj nowy produkt do bazy danych
+            DatabaseConnection dbConnection = new DatabaseConnection();
+            bool success = dbConnection.AddProduct(productName, quantity, price);
+            if (success)
+            {
+                MessageBox.Show("Product added successfully.");
+                RefreshProductList();
+            }
+            else
+            {
+                if (dbConnection.ProductExists(productName))
+                {
+                    MessageBox.Show("Product already exists");
+                }
+                else
+                    MessageBox.Show("Failed to add product.");
+            }
+        }
+
+        private void AddQuantityButton_Click(object sender, RoutedEventArgs e)
+        {
+            //Product selectedProduct = (Product)ProductDataGrid.SelectedItem;
+
+            //if (selectedProduct != null)
+            //{
+            //    // Pobierz ilość, którą chcesz dodać
+            //    int quantityToAdd = 1; // Możesz zmienić tę wartość na dowolną inną
+
+            //    // Dodaj ilość do wybranego produktu
+            //    selectedProduct.Quantity += quantityToAdd;
+
+            //    // Zaktualizuj produkt w bazie danych
+            //    DatabaseConnection dbConnection = new DatabaseConnection();
+            //    bool success = dbConnection.UpdateProduct(selectedProduct);
+
+            //    if (success)
+            //    {
+            //        RefreshProductList(); // Odśwież listę produktów
+            //    }
+            //    else
+            //    {
+            //        MessageBox.Show("Failed to update product quantity.");
+            //    }
+            //}
+            //else
+            //{
+            //    MessageBox.Show("Please select a product first.");
+            //}
+
+
+            var selectedProduct = ProductDataGrid.SelectedItem as Product;
+            if (selectedProduct == null)
+            {
+                MessageBox.Show("Please select a product to add quantity to.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            selectedProduct.Quantity++;
+
+            bool success = dbConnection.UpdateProduct(selectedProduct);
+
+            if (success)
+            {
+                //RefreshProductList();
+                ProductDataGrid.Items.Refresh();
+            }
+        }
+
+        private void RemoveQuantityButton_Click(object sender, RoutedEventArgs e)
+        {
+            //Product selectedProduct = (Product)ProductDataGrid.SelectedItem;
+
+            //if (selectedProduct != null)
+            //{
+            //    // Pobierz ilość, którą chcesz odjąć
+            //    int quantityToRemove = 1; // Możesz zmienić tę wartość na dowolną inną
+
+            //    // Sprawdź, czy ilość do odjęcia nie przekracza aktualnej ilości produktu
+            //    if (selectedProduct.Quantity >= quantityToRemove)
+            //    {
+            //        // Odejmij ilość od wybranego produktu
+            //        selectedProduct.Quantity -= quantityToRemove;
+
+            //        // Zaktualizuj produkt w bazie danych
+            //        DatabaseConnection dbConnection = new DatabaseConnection();
+            //        bool success = dbConnection.UpdateProduct(selectedProduct);
+
+            //        if (success)
+            //        {
+            //            RefreshProductList(); // Odśwież listę produktów
+            //        }
+            //        else
+            //        {
+            //            MessageBox.Show("Failed to update product quantity.");
+            //        }
+            //    }
+            //    else
+            //    {
+            //        MessageBox.Show("Cannot remove more quantity than available.");
+            //    }
+            //}
+            //else
+            //{
+            //    MessageBox.Show("Please select a product first.");
+            //}
+
+            var selectedProduct = ProductDataGrid.SelectedItem as Product;
+            if (selectedProduct == null)
+            {
+                MessageBox.Show("Please select a product to remove quantity from.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            selectedProduct.Quantity--;
+
+            bool success = dbConnection.UpdateProduct(selectedProduct);
+
+            if (success)
+            {
+                ProductDataGrid.Items.Refresh();
+            }
+
+        }
+
+        private void RefreshProductList()
+        {
+            DatabaseConnection dbConnection = new DatabaseConnection();
+            List<Product> products = dbConnection.GetProducts();
+            ProductDataGrid.ItemsSource = products;
         }
     }
 }

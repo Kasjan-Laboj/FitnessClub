@@ -5,9 +5,67 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FitnessClub"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525"
-        WindowStartupLocation="CenterScreen">
-    <Grid>
-        <Button Content="Połącz z bazą danych" HorizontalAlignment="Left" VerticalAlignment="Top" Width="200" Click="Button_Click"/>
-    </Grid>
+        Title="FitnessClub" Height="700" Width="960"
+        WindowStartupLocation="CenterScreen"
+        SizeToContent="WidthAndHeight"
+        MinHeight="640"
+        MinWidth="600"
+        >
+    <TabControl x:Name="tbMain">
+        <TabItem x:Name="tbGymPass" Header="GymPass">
+            <Grid Margin="10">
+                <StackPanel>
+                    <TextBlock Text="Create Pass" FontWeight="Bold" FontSize="16" Margin="0,0,0,10" HorizontalAlignment="Center"/>
+
+                    <TextBlock Text="Imię" Margin="0,0,0,5" HorizontalAlignment="Center"/>
+                    <TextBox Name="FirstNameTextBox" Margin="250,0,250,10"/>
+
+                    <TextBlock Text="Nazwisko" Margin="0,0,0,5" HorizontalAlignment="Center"/>
+                    <TextBox Name="LastNameTextBox" Margin="250,0,250,10"/>
+
+                    <TextBlock Text="Data rozpoczęcia" Margin="0,0,0,5" HorizontalAlignment="Center"/>
+                    <Calendar Name="StartDateCalendar" Margin="0,0,0,10" SelectionMode="SingleDate" SelectedDatesChanged="StartDateCalendar_SelectedDatesChanged"/>
+
+                    <TextBlock Text="Długość karnetu (miesiące)" Margin="0,0,0,5" HorizontalAlignment="Center"/>
+                    <ComboBox Name="PassLengthComboBox" Margin="250,0,250,10" SelectionChanged="PassLengthComboBox_SelectionChanged">
+                        <ComboBoxItem Content="1"/>
+                        <ComboBoxItem Content="2"/>
+                        <ComboBoxItem Content="3"/>
+                        <ComboBoxItem Content="4"/>
+                        <ComboBoxItem Content="5"/>
+                        <ComboBoxItem Content="6"/>
+                        <ComboBoxItem Content="7"/>
+                        <ComboBoxItem Content="8"/>
+                        <ComboBoxItem Content="9"/>
+                        <ComboBoxItem Content="10"/>
+                        <ComboBoxItem Content="11"/>
+                        <ComboBoxItem Content="12"/>
+                    </ComboBox>
+
+                    <TextBlock Text="Data zakończenia" Margin="0,0,0,5" HorizontalAlignment="Center"/>
+                    <TextBlock Name="EndDateTextBlock" Margin="0,0,0,10" FontWeight="Bold"/>
+
+                    <TextBlock Text="Cena karnetu" Margin="0,0,0,5" HorizontalAlignment="Center"/>
+                    <TextBox Name="PassPriceTextBox" Margin="250,0,250,10" IsReadOnly="True"/>
+                    
+                    <Button Content="Dodaj klienta" Width="150" Margin="0,20,0,0" Click="AddClientButton_Click"/>
+                </StackPanel>
+            </Grid>
+        </TabItem>
+        <TabItem x:Name="tbClientList" Header="List of clients" HorizontalAlignment="Center">
+            <Grid>
+                <DataGrid x:Name="ClientDataGrid" AutoGenerateColumns="False" HorizontalAlignment="Center" VerticalAlignment="Top">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID" Binding="{Binding Id}" />
+                        <DataGridTextColumn Header="First Name" Binding="{Binding FirstName}" />
+                        <DataGridTextColumn Header="Last Name" Binding="{Binding LastName}" />
+                        <DataGridTextColumn Header="Start Date" Binding="{Binding StartDate}" />
+                        <DataGridTextColumn Header="End Date" Binding="{Binding EndDate}" />
+                        <DataGridTextColumn Header="Pass Length" Binding="{Binding PassLength}" />
+                        <DataGridTextColumn Header="Pass Price" Binding="{Binding PassPrice}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </TabItem>
+    </TabControl>
 </Window>

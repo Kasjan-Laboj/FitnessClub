@@ -1,10 +1,13 @@
 ﻿using Npgsql;
+using NpgsqlTypes;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -42,6 +45,42 @@ namespace FitnessClub
             {
                 throw new ApplicationException("Błąd podczas łączenia z bazą danych", ex);
             }
+
+
+            // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD pol godziny starocne pozdro
+            //try
+            //{
+            //    using (var connection = new NpgsqlConnection(connectionString))
+            //    {
+            //        connection.Open();
+
+            //        // Wywołanie procedury składowanej
+            //        using (var command = new NpgsqlCommand("CALL AuthenticateUser(@p_login, @p_password, @p_result)", connection))
+            //        {
+            //            // Parametry wejściowe
+            //            command.Parameters.AddWithValue("@p_login", login);
+            //            command.Parameters.AddWithValue("@p_password", password);
+
+            //            // Parametr wyjściowy
+            //            var resultParam = new NpgsqlParameter("@p_result", NpgsqlDbType.Integer)
+            //            {
+            //                Direction = ParameterDirection.Output
+            //            };
+            //            command.Parameters.Add(resultParam);
+
+            //            // Wykonanie procedury
+            //            command.ExecuteNonQuery();
+
+            //            // Pobranie wyniku z parametru wyjściowego
+            //            int count = Convert.ToInt32(resultParam.Value);
+            //            return count == 1;
+            //        }
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    throw new ApplicationException("Błąd podczas łączenia z bazą danych", ex);
+            //}
         }
 
 
@@ -220,6 +259,31 @@ namespace FitnessClub
                 throw new ApplicationException("Error updating product in the database", ex);
             }
         }
-    }
 
+        public bool RemoveProductQuantity(int productId, int quantity)
+        {
+            try
+            {
+                using (var connection = new NpgsqlConnection(connectionString))
+                {
+                    connection.Open();
+                    string query = "UPDATE products SET quantity = quantity - @quantity WHERE id = @id";
+
+                    using (var command = new NpgsqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@id", productId);
+                        command.Parameters.AddWithValue("@quantity", quantity);
+
+                        int result = command.ExecuteNonQuery();
+                        return result > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Error updating product quantity in the database", ex);
+            }
+        }
+
+    }
 }

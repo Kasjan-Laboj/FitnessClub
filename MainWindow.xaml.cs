@@ -33,10 +33,14 @@ namespace FitnessClub
             List<Product> productList = dbConnection.GetProducts();
             ProductComboBox.ItemsSource = productList;
         }
+        #region clientLlist
         private void LoadClients()
         {
             ClientDataGrid.ItemsSource = dbConnection.GetClients();
         }
+
+        #endregion
+        #region gymPass
         private void AddClientButton_Click(object sender, RoutedEventArgs e)
         {
             string firstName = FirstNameTextBox.Text;
@@ -130,6 +134,8 @@ namespace FitnessClub
             PassPriceTextBox.Text = string.Empty;
             EndDateTextBlock.Text = string.Empty;
         }
+        #endregion
+        #region warehouse
 
         private void AddProductButton_Click(object sender, RoutedEventArgs e)
         {
@@ -148,8 +154,8 @@ namespace FitnessClub
                 return;
             }
 
-            // Dodaj nowy produkt do bazy danych
-            DatabaseConnection dbConnection = new DatabaseConnection();
+            // nie potrzeba tyle tego
+            //DatabaseConnection dbConnection = new DatabaseConnection();
             bool success = dbConnection.AddProduct(productName, quantity, price);
             if (success)
             {
@@ -213,12 +219,12 @@ namespace FitnessClub
 
         private void RefreshProductList()
         {
-            DatabaseConnection dbConnection = new DatabaseConnection();
+            //DatabaseConnection dbConnection = new DatabaseConnection();
             List<Product> productList = dbConnection.GetProducts();
             productList.Sort((x, y) => x.Id.CompareTo(y.Id));
             ProductDataGrid.ItemsSource = productList;
         }
-
+        #endregion
         #region Shop 
 
         private List<Product> productsInCart = new List<Product>();
@@ -263,12 +269,9 @@ namespace FitnessClub
             RefreshProductList();
             RefreshCart();
 
-            // Wyświetl cenę łączną
-
             // Zresetuj cenę łączną
             TotalPriceTextBlock.Text = "0";
-        }
-
+        }     
         private void RemoveFromCartButton_Click(object sender, RoutedEventArgs e)
         {
             // Pobierz zaznaczony produkt z koszyka
@@ -292,7 +295,6 @@ namespace FitnessClub
                 }
             }
         }
-
         private void AddToCartButton_Click(object sender, RoutedEventArgs e)
         {
             if (ProductComboBox.SelectedItem is Product selectedProduct)
@@ -300,6 +302,16 @@ namespace FitnessClub
                 if (!int.TryParse(QuantityTextBox.Text, out int quantity) || quantity <= 0)
                 {
                     MessageBox.Show("Please enter a valid quantity.");
+                    return;
+                }
+
+                // Sprawdź dostępność w magazynie
+                DatabaseConnection dbConnection = new DatabaseConnection();
+                int availableQuantity = dbConnection.GetProductQuantity(selectedProduct.Id);
+
+                if (availableQuantity < quantity)
+                {
+                    MessageBox.Show($"Not enough stock. Available quantity: {availableQuantity}");
                     return;
                 }
 
@@ -318,6 +330,5 @@ namespace FitnessClub
             }
         }
         #endregion
-
     }
 }

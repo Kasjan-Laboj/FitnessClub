@@ -15,13 +15,11 @@ namespace FitnessClub
 {
     internal class DatabaseConnection
     {
-        private string connectionString = "Host=localhost;Username=postgres;Password=1234;Database=FitnessClub";
-
+        private readonly string connectionString = "Host=localhost;Username=postgres;Password=1234;Database=FitnessClub";
         public DatabaseConnection()
         {
             connectionString = ConfigurationManager.ConnectionStrings["PostgreSqlConnectionString"].ConnectionString;
         }
-
         public bool AuthenticateUser(string login, string password)
         {
             try
@@ -44,46 +42,8 @@ namespace FitnessClub
             catch (Exception ex)
             {
                 throw new ApplicationException("Błąd podczas łączenia z bazą danych", ex);
-            }
-
-
-            // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD pol godziny starocne pozdro
-            //try
-            //{
-            //    using (var connection = new NpgsqlConnection(connectionString))
-            //    {
-            //        connection.Open();
-
-            //        // Wywołanie procedury składowanej
-            //        using (var command = new NpgsqlCommand("CALL AuthenticateUser(@p_login, @p_password, @p_result)", connection))
-            //        {
-            //            // Parametry wejściowe
-            //            command.Parameters.AddWithValue("@p_login", login);
-            //            command.Parameters.AddWithValue("@p_password", password);
-
-            //            // Parametr wyjściowy
-            //            var resultParam = new NpgsqlParameter("@p_result", NpgsqlDbType.Integer)
-            //            {
-            //                Direction = ParameterDirection.Output
-            //            };
-            //            command.Parameters.Add(resultParam);
-
-            //            // Wykonanie procedury
-            //            command.ExecuteNonQuery();
-
-            //            // Pobranie wyniku z parametru wyjściowego
-            //            int count = Convert.ToInt32(resultParam.Value);
-            //            return count == 1;
-            //        }
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    throw new ApplicationException("Błąd podczas łączenia z bazą danych", ex);
-            //}
+            }         
         }
-
-
         public bool AddClient(string firstName, string lastName, DateTime startDate, DateTime endDate, int passLength, decimal passPrice)
         {
             try
@@ -184,31 +144,56 @@ namespace FitnessClub
                 throw new ApplicationException("Error while retrieving products from the database", ex);
             }
         }
-
         public bool AddProduct(string name, int quantity, decimal price)
         {
+            //TO JEST TRANSAKCJA----------------------------------------------------------------------------------------------------------------------------------
             try
             {
-                // Sprawdzenie, czy produkt o podanej nazwie już istnieje
                 if (ProductExists(name))
                 {
-                    // Jeśli produkt o takiej nazwie już istnieje, zwróć false
                     return false;
                 }
 
                 using (var connection = new NpgsqlConnection(connectionString))
                 {
+                    //connection.Open();                   
+
+                    //string query = "INSERT INTO products (name, quantity, price) VALUES (@name, @quantity, @price)";
+
+                    //using (var command = new NpgsqlCommand(query, connection))
+                    //{
+                    //    command.Parameters.AddWithValue("@name", name);
+                    //    command.Parameters.AddWithValue("@quantity", quantity);
+                    //    command.Parameters.AddWithValue("@price", price);
+
+                    //    int result = command.ExecuteNonQuery();
+                    //    return result > 0;
+                    //}
+
                     connection.Open();
-                    string query = "INSERT INTO products (name, quantity, price) VALUES (@name, @quantity, @price)";
 
-                    using (var command = new NpgsqlCommand(query, connection))
+                    using (var transaction = connection.BeginTransaction())
                     {
-                        command.Parameters.AddWithValue("@name", name);
-                        command.Parameters.AddWithValue("@quantity", quantity);
-                        command.Parameters.AddWithValue("@price", price);
+                        try
+                        {
+                            string query = "INSERT INTO products (name, quantity, price) VALUES (@name, @quantity, @price)";
 
-                        int result = command.ExecuteNonQuery();
-                        return result > 0;
+                            using (var command = new NpgsqlCommand(query, connection))
+                            {
+                                command.Parameters.AddWithValue("@name", name);
+                                command.Parameters.AddWithValue("@quantity", quantity);
+                                command.Parameters.AddWithValue("@price", price);
+
+                                int result = command.ExecuteNonQuery();
+                                transaction.Commit();
+                                return result > 0;
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            transaction.Rollback();
+                            throw;
+                        }
                     }
                 }
             }
@@ -233,7 +218,6 @@ namespace FitnessClub
                 }
             }
         }
-
         public bool UpdateProduct(Product product)
         {
             try
@@ -259,7 +243,6 @@ namespace FitnessClub
                 throw new ApplicationException("Error updating product in the database", ex);
             }
         }
-
         public bool RemoveProductQuantity(int productId, int quantity)
         {
             try
@@ -284,6 +267,35 @@ namespace FitnessClub
                 throw new ApplicationException("Error updating product quantity in the database", ex);
             }
         }
+        public int GetProductQuantity(int productId)
+        {
+            try
+            {
+                using (var connection = new NpgsqlConnection(connectionString))
+                {
+                    connection.Open();
+                    string query = "SELECT quantity FROM products WHERE id = @id";
 
+                    using (var command = new NpgsqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@id", productId);
+
+                        object result = command.ExecuteScalar();
+                        if (result != null)
+                        {
+                            return Convert.ToInt32(result);
+                        }
+                        else
+                        {
+                            return 0;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Error getting product quantity from database", ex);
+            }
+        }
     }
 }

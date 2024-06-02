@@ -9,25 +9,24 @@
         WindowStartupLocation="CenterScreen"
         SizeToContent="WidthAndHeight"
         MinHeight="640"
-        MinWidth="600"
-        >
+        MinWidth="600">
     <TabControl x:Name="tbMain">
         <TabItem x:Name="tbGymPass" Header="GymPass">
             <Grid Margin="10">
                 <StackPanel>
                     <TextBlock Text="Create Pass" FontWeight="Bold" FontSize="16" Margin="0,0,0,10" HorizontalAlignment="Center"/>
 
-                    <TextBlock Text="Imię" Margin="0,0,0,5" HorizontalAlignment="Center"/>
-                    <TextBox Name="FirstNameTextBox" Margin="250,0,250,10"/>
+                    <TextBlock Text="Firstname" Margin="0,0,0,5" HorizontalAlignment="Center"/>
+                    <TextBox Name="FirstNameTextBox" Margin="250,0,250,10" MaxWidth="330"/>
 
-                    <TextBlock Text="Nazwisko" Margin="0,0,0,5" HorizontalAlignment="Center"/>
-                    <TextBox Name="LastNameTextBox" Margin="250,0,250,10"/>
+                    <TextBlock Text="Last Name" Margin="0,0,0,5" HorizontalAlignment="Center"/>
+                    <TextBox Name="LastNameTextBox" Margin="250,0,250,10" MaxWidth="330"/>
 
-                    <TextBlock Text="Data rozpoczęcia" Margin="0,0,0,5" HorizontalAlignment="Center"/>
+                    <TextBlock Text="First day" Margin="0,0,0,5" HorizontalAlignment="Center"/>
                     <Calendar Name="StartDateCalendar" Margin="0,0,0,10" SelectionMode="SingleDate" SelectedDatesChanged="StartDateCalendar_SelectedDatesChanged"/>
 
-                    <TextBlock Text="Długość karnetu (miesiące)" Margin="0,0,0,5" HorizontalAlignment="Center"/>
-                    <ComboBox Name="PassLengthComboBox" Margin="250,0,250,10" SelectionChanged="PassLengthComboBox_SelectionChanged">
+                    <TextBlock Text="Pass length (months)" Margin="0,0,0,5" HorizontalAlignment="Center"/>
+                    <ComboBox Name="PassLengthComboBox" Margin="250,0,250,10" SelectionChanged="PassLengthComboBox_SelectionChanged" MaxWidth="330">
                         <ComboBoxItem Content="1"/>
                         <ComboBoxItem Content="2"/>
                         <ComboBoxItem Content="3"/>
@@ -42,13 +41,13 @@
                         <ComboBoxItem Content="12"/>
                     </ComboBox>
 
-                    <TextBlock Text="Data zakończenia" Margin="0,0,0,5" HorizontalAlignment="Center"/>
-                    <TextBlock Name="EndDateTextBlock" Margin="0,0,0,10" FontWeight="Bold"/>
+                    <TextBlock Text="End date" Margin="0,0,0,5" HorizontalAlignment="Center"/>
+                    <TextBlock Name="EndDateTextBlock" Margin="0,0,0,10" FontWeight="Bold" MaxWidth="330"/>
 
-                    <TextBlock Text="Cena karnetu" Margin="0,0,0,5" HorizontalAlignment="Center"/>
-                    <TextBox Name="PassPriceTextBox" Margin="250,0,250,10" IsReadOnly="True"/>
+                    <TextBlock Text="Price" Margin="0,0,0,5" HorizontalAlignment="Center"/>
+                    <TextBox Name="PassPriceTextBox" Margin="250,0,250,10" IsReadOnly="True" MaxWidth="330"/>
 
-                    <Button Content="Dodaj klienta" Width="150" Margin="0,20,0,0" Click="AddClientButton_Click"/>
+                    <Button Content="Add client" Width="150" Margin="0,20,0,0" Click="AddClientButton_Click"/>
                 </StackPanel>
             </Grid>
         </TabItem>
@@ -84,7 +83,7 @@
                 <!-- Formularz dodawania nowego produktu -->
                 <StackPanel Grid.Row="0" Margin="10,10,10,10" Grid.ColumnSpan="2">
                     <TextBlock Text="Add New Product" FontWeight="Bold" FontSize="16" Margin="0,0,0,10" HorizontalAlignment="Center"/>
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <TextBlock Text="Product Name:" Margin="0,0,10,0"/>
                         <TextBox x:Name="NewProductNameTextBox" Width="150" Margin="0,0,10,0"/>
                         <TextBlock Text="Quantity:" Margin="0,0,10,0"/>

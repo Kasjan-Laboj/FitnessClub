@@ -243,7 +243,8 @@ namespace FitnessClub
                 throw new ApplicationException("Error updating product in the database", ex);
             }
         }
-        public bool RemoveProductQuantity(int productId, int quantity)
+
+        public bool RemoveProductQuantity(int productId, int quantity, int employeeId)
         {
             try
             {
@@ -258,13 +259,46 @@ namespace FitnessClub
                         command.Parameters.AddWithValue("@quantity", quantity);
 
                         int result = command.ExecuteNonQuery();
-                        return result > 0;
+
+                        if (result > 0)
+                        {
+                            // Rejestruj sprzedaż
+                            bool success = RegisterProductSale(productId, employeeId, quantity);
+                            return success;
+                        }
+                        return false;
                     }
                 }
             }
             catch (Exception ex)
             {
                 throw new ApplicationException("Error updating product quantity in the database", ex);
+            }
+        }
+
+        private bool RegisterProductSale(int productId, int employeeId, int quantity)
+        {
+            try
+            {
+                using (var connection = new NpgsqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    string query = "INSERT INTO product_sales (product_id, employee_id, sale_date, quantity) VALUES (@productId, @employeeId, @saleDate, @quantity)";
+                    using (var command = new NpgsqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@productId", productId);
+                        command.Parameters.AddWithValue("@employeeId", employeeId);
+                        command.Parameters.AddWithValue("@saleDate", DateTime.Now);
+                        command.Parameters.AddWithValue("@quantity", quantity);
+                        int result = command.ExecuteNonQuery();
+                        return result > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Error registering product sale", ex);
             }
         }
         public int GetProductQuantity(int productId)

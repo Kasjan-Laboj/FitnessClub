@@ -247,13 +247,42 @@ namespace FitnessClub
             TotalPriceTextBlock.Text = totalPrice.ToString("C");
         }
 
+        //private void CheckoutButton_Click(object sender, RoutedEventArgs e)
+        //{
+        //    // Pobierz ilość każdego produktu z koszyka i usuń z bazy danych
+        //    foreach (Product product in productsInCart)
+        //    {
+        //        DatabaseConnection dbConnection = new DatabaseConnection();
+        //        bool success = dbConnection.RemoveProductQuantity(product.Id, product.Quantity);
+        //        if (!success)
+        //        {
+        //            MessageBox.Show($"Failed to update product quantity for {product.Name}.");
+        //            return;
+        //        }
+        //    }
+
+        //    MessageBox.Show($"Total Price: {TotalPriceTextBlock.Text}");
+        //    // Wyczyść koszyk
+        //    productsInCart.Clear();
+
+        //    // Odśwież stan sklepu
+        //    RefreshProductList();
+        //    RefreshCart();
+
+        //    // Wyświetl cenę łączną
+
+        //    // Zresetuj cenę łączną
+        //    TotalPriceTextBlock.Text = "0";
+        //}
         private void CheckoutButton_Click(object sender, RoutedEventArgs e)
         {
+            int employeeId = GetCurrentEmployeeId(); // Zakładamy, że istnieje metoda pobierająca aktualnego pracownika
+
             // Pobierz ilość każdego produktu z koszyka i usuń z bazy danych
             foreach (Product product in productsInCart)
             {
                 DatabaseConnection dbConnection = new DatabaseConnection();
-                bool success = dbConnection.RemoveProductQuantity(product.Id, product.Quantity);
+                bool success = dbConnection.RemoveProductQuantity(product.Id, product.Quantity, employeeId); // Przekazujemy employeeId
                 if (!success)
                 {
                     MessageBox.Show($"Failed to update product quantity for {product.Name}.");
@@ -271,7 +300,15 @@ namespace FitnessClub
 
             // Zresetuj cenę łączną
             TotalPriceTextBlock.Text = "0";
-        }     
+        }
+
+        // Przykładowa metoda pobierania aktualnego pracownika, dostosuj do swojego systemu
+        private int GetCurrentEmployeeId()
+        {
+            // Pobieranie aktualnego identyfikatora pracownika, np. z sesji lub kontekstu
+            return 1; // Zastąp faktycznym sposobem pobierania id pracownika
+        }
+
         private void RemoveFromCartButton_Click(object sender, RoutedEventArgs e)
         {
             // Pobierz zaznaczony produkt z koszyka

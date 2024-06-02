@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Npgsql;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -30,10 +31,14 @@ namespace FitnessClub
             string password = PasswordBox.Password;
 
             var dbConnection = new DatabaseConnection();
-            bool isAuthenticated = dbConnection.AuthenticateUser(username, password);
+            int employeeId = dbConnection.AuthenticateUser(username, password);
 
-            if (isAuthenticated)
+            if (employeeId != -1)
             {
+                UserSession.CurrentEmployeeId = employeeId; // Ustawienie identyfikatora pracownika w sesji
+                MessageBox.Show("Zalogowano pomyślnie!");
+
+                // Przejście do głównego okna aplikacji (jeśli takie istnieje)
                 var mainWindow = new MainWindow();
                 mainWindow.Show();
             }

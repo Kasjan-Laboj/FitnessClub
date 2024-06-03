@@ -33,10 +33,8 @@ namespace FitnessClub
             List<Product> productList = dbConnection.GetProducts();
             ProductComboBox.ItemsSource = productList;
         }
-        private void LoadClients()
-        {
-            ClientDataGrid.ItemsSource = dbConnection.GetClients();
-        }
+
+        #region ClientPass
         private void AddClientButton_Click(object sender, RoutedEventArgs e)
         {
             string firstName = FirstNameTextBox.Text;
@@ -70,14 +68,6 @@ namespace FitnessClub
             {
                 MessageBox.Show("Wystąpił błąd podczas dodawania klienta.");
             }
-        }
-        private void RefreshClientList()
-        {
-            // Pobierz nową listę klientów z bazy danych
-            List<Client> clients = dbConnection.GetClients();
-
-            // Przypisz nową listę klientów do ItemsSource DataGrid
-            ClientDataGrid.ItemsSource = clients;
         }
         private void PassLengthComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -120,6 +110,7 @@ namespace FitnessClub
                 EndDateTextBlock.Text = string.Empty;
                 PassPriceTextBox.Text = string.Empty;
             }
+
         }
         private void ClearInputFields()
         {
@@ -130,7 +121,22 @@ namespace FitnessClub
             PassPriceTextBox.Text = string.Empty;
             EndDateTextBlock.Text = string.Empty;
         }
+        private void RefreshClientList()
+        {
+            // Pobierz nową listę klientów z bazy danych
+            List<Client> clients = dbConnection.GetClients();
 
+            // Przypisz nową listę klientów do ItemsSource DataGrid
+            ClientDataGrid.ItemsSource = clients;
+        }
+        #endregion
+        #region ClientList
+        private void LoadClients()
+        {
+            ClientDataGrid.ItemsSource = dbConnection.GetClients();
+        }
+        #endregion
+        #region Warehouse
         private void AddProductButton_Click(object sender, RoutedEventArgs e)
         {
             string productName = NewProductNameTextBox.Text;
@@ -219,6 +225,7 @@ namespace FitnessClub
             ProductDataGrid.ItemsSource = productList;
         }
 
+        #endregion
         #region Shop 
 
         private List<Product> productsInCart = new List<Product>();
@@ -240,34 +247,6 @@ namespace FitnessClub
             }
             TotalPriceTextBlock.Text = totalPrice.ToString("C");
         }
-
-        //private void CheckoutButton_Click(object sender, RoutedEventArgs e)
-        //{
-        //    // Pobierz ilość każdego produktu z koszyka i usuń z bazy danych
-        //    foreach (Product product in productsInCart)
-        //    {
-        //        DatabaseConnection dbConnection = new DatabaseConnection();
-        //        bool success = dbConnection.RemoveProductQuantity(product.Id, product.Quantity);
-        //        if (!success)
-        //        {
-        //            MessageBox.Show($"Failed to update product quantity for {product.Name}.");
-        //            return;
-        //        }
-        //    }
-
-        //    MessageBox.Show($"Total Price: {TotalPriceTextBlock.Text}");
-        //    // Wyczyść koszyk
-        //    productsInCart.Clear();
-
-        //    // Odśwież stan sklepu
-        //    RefreshProductList();
-        //    RefreshCart();
-
-        //    // Wyświetl cenę łączną
-
-        //    // Zresetuj cenę łączną
-        //    TotalPriceTextBlock.Text = "0";
-        //}
 
         private void CheckoutButton_Click(object sender, RoutedEventArgs e)
         {

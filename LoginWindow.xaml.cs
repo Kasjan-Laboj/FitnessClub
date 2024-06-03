@@ -24,7 +24,11 @@ namespace FitnessClub
         {
             InitializeComponent();
         }
-
+        /// <summary>
+        /// Button to login into application as employee
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
             string username = UsernameTextBox.Text;
@@ -35,16 +39,17 @@ namespace FitnessClub
 
             if (employeeId != -1)
             {
-                UserSession.CurrentEmployeeId = employeeId; // Ustawienie identyfikatora pracownika w sesji
-                MessageBox.Show("Zalogowano pomyślnie!");
+                UserSession.CurrentEmployeeId = employeeId; // Setting up employee id after login
+                MessageBox.Show("Login succesfull!");
 
-                // Przejście do głównego okna aplikacji (jeśli takie istnieje)
+                // Switching windows from login to main
                 var mainWindow = new MainWindow();
                 mainWindow.Show();
+                PasswordBox.Clear();
             }
             else
             {
-                MessageBox.Show("Nieprawidłowy login lub hasło.");
+                MessageBox.Show("Wrong login or password.");
             }
         }
     }

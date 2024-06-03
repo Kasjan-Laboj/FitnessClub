@@ -17,16 +17,16 @@
                 <StackPanel>
                     <TextBlock Text="Create Pass" FontWeight="Bold" FontSize="16" Margin="0,0,0,10" HorizontalAlignment="Center"/>
 
-                    <TextBlock Text="Imię" Margin="0,0,0,5" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Firstname" Margin="0,0,0,5" HorizontalAlignment="Center"/>
                     <TextBox Name="FirstNameTextBox" Margin="250,0,250,10"/>
 
-                    <TextBlock Text="Nazwisko" Margin="0,0,0,5" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Lastname" Margin="0,0,0,5" HorizontalAlignment="Center"/>
                     <TextBox Name="LastNameTextBox" Margin="250,0,250,10"/>
 
-                    <TextBlock Text="Data rozpoczęcia" Margin="0,0,0,5" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Start date" Margin="0,0,0,5" HorizontalAlignment="Center"/>
                     <Calendar Name="StartDateCalendar" Margin="0,0,0,10" SelectionMode="SingleDate" SelectedDatesChanged="StartDateCalendar_SelectedDatesChanged"/>
 
-                    <TextBlock Text="Długość karnetu (miesiące)" Margin="0,0,0,5" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Pass length (months)" Margin="0,0,0,5" HorizontalAlignment="Center"/>
                     <ComboBox Name="PassLengthComboBox" Margin="250,0,250,10" SelectionChanged="PassLengthComboBox_SelectionChanged">
                         <ComboBoxItem Content="1"/>
                         <ComboBoxItem Content="2"/>
@@ -42,13 +42,13 @@
                         <ComboBoxItem Content="12"/>
                     </ComboBox>
 
-                    <TextBlock Text="Data zakończenia" Margin="0,0,0,5" HorizontalAlignment="Center"/>
+                    <TextBlock Text="End date" Margin="0,0,0,5" HorizontalAlignment="Center"/>
                     <TextBlock Name="EndDateTextBlock" Margin="0,0,0,10" FontWeight="Bold"/>
 
-                    <TextBlock Text="Cena karnetu" Margin="0,0,0,5" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Price" Margin="0,0,0,5" HorizontalAlignment="Center"/>
                     <TextBox Name="PassPriceTextBox" Margin="250,0,250,10" IsReadOnly="True"/>
 
-                    <Button Content="Dodaj klienta" Width="150" Margin="0,20,0,0" Click="AddClientButton_Click"/>
+                    <Button Content="Add client" Width="150" Margin="0,20,0,0" Click="AddClientButton_Click"/>
                 </StackPanel>
             </Grid>
         </TabItem>
@@ -81,7 +81,6 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <!-- Formularz dodawania nowego produktu -->
                 <StackPanel Grid.Row="0" Margin="10,10,10,10" Grid.ColumnSpan="2">
                     <TextBlock Text="Add New Product" FontWeight="Bold" FontSize="16" Margin="0,0,0,10" HorizontalAlignment="Center"/>
                     <StackPanel Orientation="Horizontal">
@@ -95,7 +94,6 @@
                     </StackPanel>
                 </StackPanel>
 
-                <!-- DataGrid do wyświetlania produktów -->
                 <DataGrid x:Name="ProductDataGrid" Grid.Row="1" AutoGenerateColumns="False" Margin="10,10,10,10" MaxWidth="600" IsReadOnly="True" SelectionMode="Single" Grid.ColumnSpan="2" CanUserAddRows="False">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
@@ -129,7 +127,6 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <!-- Wybór produktu -->
                 <StackPanel Grid.Row="0" Margin="10">
                     <TextBlock Text="Add Product to Cart" FontWeight="Bold" FontSize="16" Margin="0,0,0,10" HorizontalAlignment="Center"/>
                     <ComboBox x:Name="ProductComboBox" Width="200" Margin="0,0,0,10" DisplayMemberPath="Name"/>
@@ -140,7 +137,6 @@
                     <Button Content="Add to Cart" Click="AddToCartButton_Click" Width="100" HorizontalAlignment="Center"/>
                 </StackPanel>
 
-                <!-- Lista produktów w koszyku -->
                 <DataGrid x:Name="CartDataGrid" Grid.Row="1" AutoGenerateColumns="False" Margin="10" MaxWidth="600" CanUserAddRows="False">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
@@ -156,7 +152,6 @@
                     </DataGrid.Columns>
                 </DataGrid>
 
-                <!-- Podsumowanie cen -->
                 <StackPanel Grid.Row="2" Margin="10">
                     <TextBlock Text="Total Price" FontWeight="Bold" FontSize="16" Margin="0,10,0,5" HorizontalAlignment="Center"/>
                     <TextBlock x:Name="TotalPriceTextBlock" Text="0" FontSize="14" Margin="0,0,0,10" HorizontalAlignment="Center"/>

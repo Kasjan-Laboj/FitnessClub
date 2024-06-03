@@ -21,13 +21,14 @@ namespace FitnessClub
         {
             connectionString = ConfigurationManager.ConnectionStrings["PostgreSqlConnectionString"].ConnectionString;
         }
-        /// <summary>
-        /// Authenticate employee from data base
+
+        // <summary>
+        /// Authenticates an employee from the database.
         /// </summary>
-        /// <param name="username"></param>
-        /// <param name="password"></param>
-        /// <returns></returns>
-        /// <exception cref="ApplicationException"></exception>
+        /// <param name="username">The username of the employee.</param>
+        /// <param name="password">The password of the employee.</param>
+        /// <returns>The employee ID if authentication is successful, otherwise -1.</returns>
+        /// <exception cref="ApplicationException">Thrown when there is an error authenticating the user.</exception>
         public int AuthenticateUser(string username, string password)
         {
             try
@@ -57,7 +58,17 @@ namespace FitnessClub
 
             return -1; // If login went wrong, return -1
         }
-
+        /// <summary>
+        /// Adds a new client to the database.
+        /// </summary>
+        /// <param name="firstName">The first name of the client.</param>
+        /// <param name="lastName">The last name of the client.</param>
+        /// <param name="startDate">The start date of the client's pass.</param>
+        /// <param name="endDate">The end date of the client's pass.</param>
+        /// <param name="passLength">The length of the client's pass.</param>
+        /// <param name="passPrice">The price of the client's pass.</param>
+        /// <returns>True if the client was successfully added, otherwise false.</returns>
+        /// <exception cref="ApplicationException">Thrown when there is an error adding the client to the database.</exception>
         public bool AddClient(string firstName, string lastName, DateTime startDate, DateTime endDate, int passLength, decimal passPrice)
         {
             try
@@ -86,6 +97,11 @@ namespace FitnessClub
                 throw new ApplicationException("Błąd podczas łączenia z bazą danych", ex);
             }
         }
+        /// <summary>
+        /// Retrieves a list of clients from the database.
+        /// </summary>
+        /// <returns>A list of Client objects.</returns>
+        /// <exception cref="ApplicationException">Thrown when there is an error retrieving clients from the database.</exception>
         public List<Client> GetClients()
         {
             try
@@ -123,6 +139,11 @@ namespace FitnessClub
                 throw new ApplicationException("Błąd podczas pobierania klientów z bazy danych", ex);
             }
         }
+        /// <summary>
+        /// Retrieves a list of products from the database.
+        /// </summary>
+        /// <returns>A list of Product objects.</returns>
+        /// <exception cref="ApplicationException">Thrown when there is an error retrieving products from the database.</exception>
         public List<Product> GetProducts()
         {
             try
@@ -158,7 +179,14 @@ namespace FitnessClub
                 throw new ApplicationException("Error while retrieving products from the database", ex);
             }
         }
-
+        /// <summary>
+        /// Adds a new product to the database if it doesn't already exist.
+        /// </summary>
+        /// <param name="name">The name of the product to add.</param>
+        /// <param name="quantity">The quantity of the product to add.</param>
+        /// <param name="price">The price of the product to add.</param>
+        /// <returns>True if the product was successfully added, otherwise false.</returns>
+        /// <exception cref="ApplicationException">Thrown when there is an error adding the product to the database.</exception>
         public bool AddProduct(string name, int quantity, decimal price)
         {
             try
@@ -189,7 +217,11 @@ namespace FitnessClub
                 throw new ApplicationException("Error adding product to the database", ex);
             }
         }
-
+        /// <summary>
+        /// Checks if a product with the given name already exists in the database.
+        /// </summary>
+        /// <param name="name">The name of the product to check.</param>
+        /// <returns>True if the product already exists, otherwise false.</returns>
         public bool ProductExists(string name)
         {
             using (var connection = new NpgsqlConnection(connectionString))
@@ -206,7 +238,12 @@ namespace FitnessClub
                 }
             }
         }
-
+        /// <summary>
+        /// Updates a product in the database.
+        /// </summary>
+        /// <param name="product">The Product object containing updated information.</param>
+        /// <returns>True if the product was successfully updated, otherwise false.</returns>
+        /// <exception cref="ApplicationException">Thrown when there is an error updating the product in the database.</exception>
         public bool UpdateProduct(Product product)
         {
             try
@@ -232,6 +269,14 @@ namespace FitnessClub
                 throw new ApplicationException("Error updating product in the database", ex);
             }
         }
+        /// <summary>
+        /// Removes a specified quantity of a product from the database.
+        /// </summary>
+        /// <param name="productId">The ID of the product to remove quantity from.</param>
+        /// <param name="quantity">The quantity to remove from the product.</param>
+        /// <param name="employeeId">The ID of the employee performing the operation.</param>
+        /// <returns>True if the quantity was successfully removed, otherwise false.</returns>
+        /// <exception cref="ApplicationException">Thrown when there is an error updating the product quantity in the database.</exception>
         public bool RemoveProductQuantity(int productId, int quantity, int employeeId)
         {
             try
@@ -251,7 +296,6 @@ namespace FitnessClub
 
                         if (result > 0)
                         {
-                            //Rejestruj sprzedaż
                             //bool success = RegisterProductSale(employeeId, productId, quantity);
                             //return success;
                             return true;
@@ -265,33 +309,12 @@ namespace FitnessClub
                 throw new ApplicationException("Error updating product quantity in the database", ex);
             }
         }
-
-        //private bool RegisterProductSale(int employeeId, int productId, int quantity)
-        //{
-        //    try
-        //    {
-        //        using (var connection = new NpgsqlConnection(connectionString))
-        //        {
-        //            connection.Open();
-
-        //            string query = "INSERT INTO product_sales (employee_id, product_id, quantity, sale_date) VALUES (@employeeId, @productId, @quantity, @saleDate)";
-        //            using (var command = new NpgsqlCommand(query, connection))
-        //            {
-        //                command.Parameters.AddWithValue("@employeeId", employeeId);
-        //                command.Parameters.AddWithValue("@productId", productId);
-        //                command.Parameters.AddWithValue("@quantity", quantity);
-        //                command.Parameters.AddWithValue("@saleDate", DateTime.Now);
-        //                int result = command.ExecuteNonQuery();
-        //                return result > 0;
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw new ApplicationException("Error registering product sale", ex);
-        //    }
-        //}
-
+        /// <summary>
+        /// Checks the availability of a product in the database.
+        /// </summary>
+        /// <param name="productId">The ID of the product to check availability for.</param>
+        /// <returns>The available quantity of the product.</returns>
+        /// <exception cref="ApplicationException">Thrown when there is an error checking product availability in the database.</exception>
         public int CheckProductAvailability(int productId)
         {
             try

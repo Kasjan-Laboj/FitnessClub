@@ -10,6 +10,8 @@
         SizeToContent="WidthAndHeight"
         MinHeight="640"
         MinWidth="600"
+        MaxHeight="1200"
+        MaxWidth="1400"
         >
     <TabControl x:Name="tbMain">
         <TabItem x:Name="tbGymPass" Header="GymPass">

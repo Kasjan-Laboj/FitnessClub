@@ -21,6 +21,13 @@ namespace FitnessClub
         {
             connectionString = ConfigurationManager.ConnectionStrings["PostgreSqlConnectionString"].ConnectionString;
         }
+        /// <summary>
+        /// Authenticate employee from data base
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        /// <exception cref="ApplicationException"></exception>
         public int AuthenticateUser(string username, string password)
         {
             try
@@ -238,7 +245,7 @@ namespace FitnessClub
                     {
                         command.Parameters.AddWithValue("@id", productId);
                         command.Parameters.AddWithValue("@quantity", quantity);
-                        //command.Parameters.AddWithValue("employeid", employeeId);
+                        command.Parameters.AddWithValue("employeid", employeeId);
 
                         int result = command.ExecuteNonQuery();
 
@@ -246,8 +253,8 @@ namespace FitnessClub
                         {
                             //Rejestruj sprzedaż
                             //bool success = RegisterProductSale(employeeId, productId, quantity);
-                            return true;
                             //return success;
+                            return true;
                         }
                         return false;
                     }
@@ -284,5 +291,28 @@ namespace FitnessClub
         //        throw new ApplicationException("Error registering product sale", ex);
         //    }
         //}
+
+        public int CheckProductAvailability(int productId)
+        {
+            try
+            {
+                using (var connection = new NpgsqlConnection(connectionString))
+                {
+                    connection.Open();
+                    string query = "SELECT quantity FROM products WHERE id = @id";
+
+                    using (var command = new NpgsqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@id", productId);
+                        int availableQuantity = (int)command.ExecuteScalar();
+                        return availableQuantity;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Error checking product availability in the database", ex);
+            }
+        }
     }
 }

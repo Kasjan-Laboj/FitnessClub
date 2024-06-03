@@ -43,7 +43,7 @@
                     </ComboBox>
 
                     <TextBlock Text="End date" Margin="0,0,0,5" HorizontalAlignment="Center"/>
-                    <TextBlock Name="EndDateTextBlock" Margin="0,0,0,10" FontWeight="Bold"/>
+                    <TextBlock Name="EndDateTextBlock" Margin="0,0,0,10" FontWeight="Bold" HorizontalAlignment="Center"/>
 
                     <TextBlock Text="Price" Margin="0,0,0,5" HorizontalAlignment="Center"/>
                     <TextBox Name="PassPriceTextBox" Margin="250,0,250,10" IsReadOnly="True"/>
@@ -83,7 +83,7 @@
 
                 <StackPanel Grid.Row="0" Margin="10,10,10,10" Grid.ColumnSpan="2">
                     <TextBlock Text="Add New Product" FontWeight="Bold" FontSize="16" Margin="0,0,0,10" HorizontalAlignment="Center"/>
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <TextBlock Text="Product Name:" Margin="0,0,10,0"/>
                         <TextBox x:Name="NewProductNameTextBox" Width="150" Margin="0,0,10,0"/>
                         <TextBlock Text="Quantity:" Margin="0,0,10,0"/>

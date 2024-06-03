@@ -306,6 +306,31 @@ namespace FitnessClub
             }
         }
 
+        //private void AddToCartButton_Click(object sender, RoutedEventArgs e)
+        //{
+        //    if (ProductComboBox.SelectedItem is Product selectedProduct)
+        //    {
+        //        if (!int.TryParse(QuantityTextBox.Text, out int quantity) || quantity <= 0)
+        //        {
+        //            MessageBox.Show("Please enter a valid quantity.");
+        //            return;
+        //        }
+
+        //        // Ustaw ilość wybranego produktu
+        //        selectedProduct.Quantity = quantity;
+
+        //        // Dodaj referencję do wybranego produktu do koszyka
+        //        productsInCart.Add(selectedProduct);
+
+        //        // Odśwież widok koszyka
+        //        RefreshCart();
+        //    }
+        //    else
+        //    {
+        //        MessageBox.Show("Please select a product to add to cart.");
+        //    }
+        //}
+
         private void AddToCartButton_Click(object sender, RoutedEventArgs e)
         {
             if (ProductComboBox.SelectedItem is Product selectedProduct)
@@ -313,6 +338,16 @@ namespace FitnessClub
                 if (!int.TryParse(QuantityTextBox.Text, out int quantity) || quantity <= 0)
                 {
                     MessageBox.Show("Please enter a valid quantity.");
+                    return;
+                }
+
+                // Sprawdź dostępność produktu w bazie danych
+                var dbConnection = new DatabaseConnection();
+                int availableQuantity = dbConnection.CheckProductAvailability(selectedProduct.Id);
+
+                if (availableQuantity < quantity)
+                {
+                    MessageBox.Show($"Insufficient stock. Available quantity: {availableQuantity}. Please enter a valid quantity.");
                     return;
                 }
 

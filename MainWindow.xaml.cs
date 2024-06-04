@@ -69,6 +69,7 @@ namespace FitnessClub
                 MessageBox.Show("Wystąpił błąd podczas dodawania klienta.");
             }
         }
+
         private void PassLengthComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             CalculateEndDate();
@@ -87,7 +88,7 @@ namespace FitnessClub
                 DateTime endDate = startDate.AddMonths(months);
                 EndDateTextBlock.Text = endDate.ToString("d MMM yyyy");
 
-                // Ustawianie ceny karnetu w zależności od długości
+                // Price of pass depends of how many months clients want to buy
                 decimal pricePerMonth;
                 if (months <= 6)
                 {
@@ -103,7 +104,7 @@ namespace FitnessClub
                 }
 
                 decimal totalPrice = pricePerMonth * months;
-                PassPriceTextBox.Text = totalPrice.ToString("F2"); // formatowanie jako liczba z dwoma miejscami dziesiętnymi
+                PassPriceTextBox.Text = totalPrice.ToString("F2"); // after the decimal point (if needed we have integers)
             }
             else
             {
@@ -247,7 +248,11 @@ namespace FitnessClub
             }
             TotalPriceTextBlock.Text = totalPrice.ToString("C");
         }
-
+        /// <summary>
+        /// Finalising transaction in cart
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void CheckoutButton_Click(object sender, RoutedEventArgs e)
         {
             if (UserSession.CurrentEmployeeId == -1)
@@ -258,7 +263,7 @@ namespace FitnessClub
 
             int employeeId = UserSession.CurrentEmployeeId;
 
-            // Pobierz ilość każdego produktu z koszyka i usuń z bazy danych
+            // Take products from warehose and delete accure amount of them in database
             foreach (Product product in productsInCart)
             {
                 var dbConnection = new DatabaseConnection();
@@ -271,26 +276,27 @@ namespace FitnessClub
             }
 
             MessageBox.Show($"Total Price: {TotalPriceTextBlock.Text}");
-            // Wyczyść koszyk
+
+
             productsInCart.Clear();
 
-            // Odśwież stan sklepu
+
             RefreshProductList();
             RefreshCart();
 
-            // Zresetuj cenę łączną
+            // Refreshing total price
             TotalPriceTextBlock.Text = "0";
         }
 
         private void RemoveFromCartButton_Click(object sender, RoutedEventArgs e)
         {
-            // Pobierz zaznaczony produkt z koszyka
+            // Take choosen product from cart
             Product selectedProduct = (Product)CartDataGrid.SelectedItem;
 
-            // Usuń zaznaczony produkt z listy koszyka
+            // Delete choosen product from cart
             productsInCart.Remove(selectedProduct);
 
-            // Odśwież widok koszyka
+            // Refresh view
             RefreshCart();
         }
 
@@ -305,31 +311,6 @@ namespace FitnessClub
                 }
             }
         }
-
-        //private void AddToCartButton_Click(object sender, RoutedEventArgs e)
-        //{
-        //    if (ProductComboBox.SelectedItem is Product selectedProduct)
-        //    {
-        //        if (!int.TryParse(QuantityTextBox.Text, out int quantity) || quantity <= 0)
-        //        {
-        //            MessageBox.Show("Please enter a valid quantity.");
-        //            return;
-        //        }
-
-        //        // Ustaw ilość wybranego produktu
-        //        selectedProduct.Quantity = quantity;
-
-        //        // Dodaj referencję do wybranego produktu do koszyka
-        //        productsInCart.Add(selectedProduct);
-
-        //        // Odśwież widok koszyka
-        //        RefreshCart();
-        //    }
-        //    else
-        //    {
-        //        MessageBox.Show("Please select a product to add to cart.");
-        //    }
-        //}
 
         private void AddToCartButton_Click(object sender, RoutedEventArgs e)
         {

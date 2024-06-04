@@ -94,7 +94,7 @@ namespace FitnessClub
             }
             catch (Exception ex)
             {
-                throw new ApplicationException("Błąd podczas łączenia z bazą danych", ex);
+                throw new ApplicationException("Error while connecting with database", ex);
             }
         }
         /// <summary>
@@ -136,7 +136,7 @@ namespace FitnessClub
             }
             catch (Exception ex)
             {
-                throw new ApplicationException("Błąd podczas pobierania klientów z bazy danych", ex);
+                throw new ApplicationException("Error while database download", ex);
             }
         }
         /// <summary>
@@ -195,21 +195,33 @@ namespace FitnessClub
                 {
                     return false;
                 }
-
+                // TRANSACTION
                 using (var connection = new NpgsqlConnection(connectionString))
                 {
                     connection.Open();
-                    string query = "INSERT INTO products (name, quantity, price) VALUES (@name, @quantity, @price)";
-
-                    using (var command = new NpgsqlCommand(query, connection))
+                    using (var transaction = connection.BeginTransaction())
                     {
-                        command.Parameters.AddWithValue("@name", name);
-                        command.Parameters.AddWithValue("@quantity", quantity);
-                        command.Parameters.AddWithValue("@price", price);
+                        try
+                        {
+                            string query = "INSERT INTO products (name, quantity, price) VALUES (@name, @quantity, @price)";
+                            using (var command = new NpgsqlCommand(query, connection))
+                            {
+                                command.Parameters.AddWithValue("name", name);
+                                command.Parameters.AddWithValue("@quantity", quantity);
+                                command.Parameters.AddWithValue("@price", price);
 
-                        int result = command.ExecuteNonQuery();
-                        return result > 0;
-                    }
+                                int result = command.ExecuteNonQuery();
+
+                                transaction.Commit();
+                                return result > 0;
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            transaction.Rollback();
+                            throw;
+                        }
+                    }               
                 }
             }
             catch (Exception ex)

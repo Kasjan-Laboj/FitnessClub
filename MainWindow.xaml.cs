@@ -32,6 +32,7 @@ namespace FitnessClub
             RefreshProductList();
             List<Product> productList = dbConnection.GetProducts();
             ProductComboBox.ItemsSource = productList;
+            LoadBookingData();
         }
 
         #region ClientPass
@@ -348,5 +349,72 @@ namespace FitnessClub
         }
         #endregion
 
+        #region Booking session
+        private void LoadBookingData()
+        {
+            try
+            {
+                // Pobierz pracowników z bazy danych i przypisz do ComboBoxa
+                List<Employee> employees = dbConnection.GetEmployeesForTraining();
+                EmployeeComboBox.ItemsSource = employees;
+                EmployeeComboBox.DisplayMemberPath = "FullName"; // Załóżmy, że Employee ma pole "FullName" zwracające pełne imię i nazwisko
+
+                // Pobierz klientów z bazy danych i przypisz do ComboBoxa
+                List<Client> clients = dbConnection.GetClientsForTraining();
+                ClientComboBox.ItemsSource = clients;
+                ClientComboBox.DisplayMemberPath = "FullName"; // Załóżmy, że Client ma pole "FullName" zwracające pełne imię i nazwisko
+
+                // Pobierz treningi z bazy danych i przypisz do ComboBoxa
+                List<Training> trainings = dbConnection.GetTrainings();
+                TrainingComboBox.ItemsSource = trainings;
+                TrainingComboBox.DisplayMemberPath = "Name"; // Załóżmy, że Training ma pole "Name" zwracające nazwę treningu
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading booking data: {ex.Message}");
+            }
+        }
+        
+        private void BookTrainingSession_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                // Pobierz wybrane wartości z ComboBoxów i DatePicker-a
+                Training selectedTraining = (Training)TrainingComboBox.SelectedItem;
+                Client selectedClient = (Client)ClientComboBox.SelectedItem;
+                Employee selectedEmployee = (Employee)EmployeeComboBox.SelectedItem;
+                DateTime selectedDate = TrainingDatePicker.SelectedDate ?? DateTime.Now;
+
+                // Sprawdź, czy wszystkie pola zostały wybrane
+                if (selectedTraining == null || selectedClient == null || selectedEmployee == null || selectedDate == null)
+                {
+                    MessageBox.Show("Please select all fields.");
+                    return;
+                }
+
+                // Dodaj nową sesję treningową do bazy danych
+                DatabaseConnection dbConnection = new DatabaseConnection();
+                bool success = dbConnection.BookTrainingSession(selectedTraining.Id, selectedClient.Id, selectedEmployee.Id, selectedDate);
+
+                if (success)
+                {
+                    MessageBox.Show("Training session booked successfully.");
+                    // Wyczyść pola formularza
+                    TrainingComboBox.SelectedIndex = -1;
+                    ClientComboBox.SelectedIndex = -1;
+                    EmployeeComboBox.SelectedIndex = -1;
+                    TrainingDatePicker.SelectedDate = null;
+                }
+                else
+                {
+                    MessageBox.Show("Failed to book training session.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred: {ex.Message}");
+            }
+        }
+        #endregion
     }
 }

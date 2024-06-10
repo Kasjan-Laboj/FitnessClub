@@ -349,5 +349,140 @@ namespace FitnessClub
                 throw new ApplicationException("Error checking product availability in the database", ex);
             }
         }
+
+        #region db Booking session
+        public List<Employee> GetEmployeesForTraining()
+        {
+            try
+            {
+                using (var connection = new NpgsqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    string query = "SELECT * FROM employees";
+
+                    using (var command = new NpgsqlCommand(query, connection))
+                    {
+                        using (var reader = command.ExecuteReader())
+                        {
+                            List<Employee> employees = new List<Employee>();
+                            while (reader.Read())
+                            {
+                                Employee employee = new Employee
+                                {
+                                    Id = reader.GetInt32(0),
+                                    FirstName = reader.GetString(3),
+                                    LastName = reader.GetString(4)
+                                };
+                                employees.Add(employee);
+                            }
+                            return employees;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Error retrieving employees from the database", ex);
+            }
+        }
+        public List<Client> GetClientsForTraining()
+        {
+            try
+            {
+                using (var connection = new NpgsqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    string query = "SELECT * FROM clients";
+
+                    using (var command = new NpgsqlCommand(query, connection))
+                    {
+                        using (var reader = command.ExecuteReader())
+                        {
+                            List<Client> clients = new List<Client>();
+                            while (reader.Read())
+                            {
+                                Client client = new Client
+                                {
+                                    Id = reader.GetInt32(0),
+                                    FirstName = reader.GetString(1),
+                                    LastName = reader.GetString(2)
+                                };
+                                clients.Add(client);
+                            }
+                            return clients;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Error retrieving clients from the database", ex);
+            }
+        }
+        public List<Training> GetTrainings()
+        {
+            try
+            {
+                using (var connection = new NpgsqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    string query = "SELECT * FROM trainings";
+
+                    using (var command = new NpgsqlCommand(query, connection))
+                    {
+                        using (var reader = command.ExecuteReader())
+                        {
+                            List<Training> trainings = new List<Training>();
+                            while (reader.Read())
+                            {
+                                Training training = new Training
+                                {
+                                    Id = reader.GetInt32(0),
+                                    Name = reader.GetString(1)
+                                };
+                                trainings.Add(training);
+                            }
+                            return trainings;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Error retrieving trainings from the database", ex);
+            }
+        }
+        public bool BookTrainingSession(int trainingId, int clientId, int employeeId, DateTime date)
+        {
+            try
+            {
+                using (var connection = new NpgsqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    string query = "INSERT INTO training_sessions (training_id, client_id, employee_id, date_time) VALUES (@trainingId, @clientId, @employeeId, @date)";
+
+                    using (var command = new NpgsqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@trainingId", trainingId);
+                        command.Parameters.AddWithValue("@clientId", clientId);
+                        command.Parameters.AddWithValue("@employeeId", employeeId);
+                        command.Parameters.AddWithValue("@date", date);
+
+                        int result = command.ExecuteNonQuery();
+                        return result > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Error booking training session in the database", ex);
+            }
+        }
+        #endregion
+
     }
 }

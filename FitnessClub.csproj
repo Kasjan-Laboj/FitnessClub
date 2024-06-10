@@ -105,6 +105,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Employee.cs" />
+    <Compile Include="Training.cs" />
     <Compile Include="UserSession.cs" />
     <Page Include="LoginWindow.xaml">
       <SubType>Designer</SubType>

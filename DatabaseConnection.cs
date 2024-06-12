@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -190,7 +191,7 @@ namespace FitnessClub
         public bool AddProduct(string name, int quantity, decimal price)
         {
             try
-            {              
+            {
                 if (ProductExists(name))
                 {
                     return false;
@@ -221,7 +222,7 @@ namespace FitnessClub
                             transaction.Rollback();
                             throw;
                         }
-                    }               
+                    }
                 }
             }
             catch (Exception ex)
@@ -482,7 +483,36 @@ namespace FitnessClub
                 throw new ApplicationException("Error booking training session in the database", ex);
             }
         }
-        #endregion
+        #endregion  
+        public List<TrainingSession> GetTrainingSessions()
+        {
+            var trainingSessions = new List<TrainingSession>();
 
+            using (var connection = new NpgsqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = "SELECT id, training_id, client_id, employee_id, date_time FROM public.training_sessions";
+
+                using (var command = new NpgsqlCommand(query, connection))
+                {
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            trainingSessions.Add(new TrainingSession
+                            {
+                                Id = reader.GetInt32(0),
+                                TrainingId = reader.GetInt32(1),
+                                ClientId = reader.GetInt32(2),
+                                EmployeeId = reader.GetInt32(3),
+                                DateTime = reader.GetDateTime(4)
+                            });
+                        }
+                    }
+                }
+            }
+
+            return trainingSessions;
+        }
     }
 }

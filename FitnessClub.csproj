@@ -107,6 +107,7 @@
     </ApplicationDefinition>
     <Compile Include="Employee.cs" />
     <Compile Include="Training.cs" />
+    <Compile Include="TrainingSession.cs" />
     <Compile Include="UserSession.cs" />
     <Page Include="LoginWindow.xaml">
       <SubType>Designer</SubType>

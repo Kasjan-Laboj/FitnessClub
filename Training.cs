@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FitnessClub
 {
-    internal class Training
+    public class Training
     {
         public int Id { get; set; }
         public string Name { get; set; }

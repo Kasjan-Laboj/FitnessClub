@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Configuration;
 using System.Data.Common;
 using System.Linq;
 using System.Text;
@@ -33,6 +34,8 @@ namespace FitnessClub
             List<Product> productList = dbConnection.GetProducts();
             ProductComboBox.ItemsSource = productList;
             LoadBookingData();
+            LoadTrainingSessions();
+
         }
 
         #region ClientPass
@@ -348,7 +351,6 @@ namespace FitnessClub
             }
         }
         #endregion
-
         #region Booking session
         private void LoadBookingData()
         {
@@ -414,6 +416,14 @@ namespace FitnessClub
             {
                 MessageBox.Show($"An error occurred: {ex.Message}");
             }
+        }
+        #endregion
+        #region ListOfTrainings 
+        
+        private void LoadTrainingSessions()
+        {
+            var trainingSessions = dbConnection.GetTrainingSessions();
+            dataGridTrainings.ItemsSource = trainingSessions;
         }
         #endregion
     }

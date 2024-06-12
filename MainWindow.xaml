@@ -183,5 +183,10 @@
                 <Button Content="Book Training Session" Click="BookTrainingSession_Click"/>
             </StackPanel>
         </TabItem>
+        <TabItem x:Name="tbListOfTrainings" Header="List of trainings">
+            <Grid>
+                <DataGrid x:Name="dataGridTrainings" AutoGenerateColumns="True"/>
+            </Grid>
+        </TabItem>
     </TabControl>
 </Window>

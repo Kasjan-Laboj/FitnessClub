@@ -185,7 +185,16 @@
         </TabItem>
         <TabItem x:Name="tbListOfTrainings" Header="List of trainings">
             <Grid>
-                <DataGrid x:Name="dataGridTrainings" AutoGenerateColumns="True"/>
+                <DataGrid x:Name="dataGridTrainings" AutoGenerateColumns="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID" Binding="{Binding Id}" />
+                        <DataGridTextColumn Header="Training Name" Binding="{Binding TrainingName}" />
+                        <!-- Zmienione -->
+                        <DataGridTextColumn Header="Client ID" Binding="{Binding ClientId}" />
+                        <DataGridTextColumn Header="Employee ID" Binding="{Binding EmployeeId}" />
+                        <DataGridTextColumn Header="Date and Time" Binding="{Binding DateTime}" />
+                    </DataGrid.Columns>
+                </DataGrid>
             </Grid>
         </TabItem>
     </TabControl>

@@ -147,6 +147,7 @@ namespace FitnessClub
             string productName = NewProductNameTextBox.Text;
             int quantity;
             decimal price;
+
             if (!int.TryParse(NewProductQuantityTextBox.Text, out quantity))
             {
                 MessageBox.Show("Quantity must be a valid integer.");
@@ -224,10 +225,9 @@ namespace FitnessClub
 
         private void RefreshProductList()
         {
-            DatabaseConnection dbConnection = new DatabaseConnection();
             List<Product> productList = dbConnection.GetProducts();
-            productList.Sort((x, y) => x.Id.CompareTo(y.Id));
-            ProductDataGrid.ItemsSource = productList;
+            ProductComboBox.ItemsSource = productList;
+            ProductComboBox.DisplayMemberPath = "Name";
         }
 
         #endregion

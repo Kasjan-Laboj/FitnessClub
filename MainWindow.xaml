@@ -163,23 +163,18 @@
         </TabItem>
         <TabItem Header="Booking Training Session">
             <StackPanel Margin="10">
-                <!-- Label i ComboBox dla wyboru treningu -->
                 <Label Content="Select Training:"/>
                 <ComboBox x:Name="TrainingComboBox" Margin="0 0 0 5"/>
 
-                <!-- Label i ComboBox dla wyboru klienta -->
                 <Label Content="Select Client:"/>
                 <ComboBox x:Name="ClientComboBox" Margin="0 0 0 5"/>
 
-                <!-- Label i ComboBox dla wyboru pracownika -->
                 <Label Content="Select Employee:"/>
                 <ComboBox x:Name="EmployeeComboBox" Margin="0 0 0 5"/>
 
-                <!-- DatePicker dla wyboru daty -->
                 <Label Content="Select Date:"/>
                 <DatePicker x:Name="TrainingDatePicker" Margin="0 0 0 5"/>
 
-                <!-- Przycisk do zatwierdzania -->
                 <Button Content="Book Training Session" Click="BookTrainingSession_Click"/>
             </StackPanel>
         </TabItem>
@@ -190,9 +185,7 @@
                         <DataGridTextColumn Header="ID" Binding="{Binding Id}" />
                         <DataGridTextColumn Header="Training Name" Binding="{Binding TrainingName}" />
                         <DataGridTextColumn Header="Client First Name" Binding="{Binding ClientFirstName}" />
-                        <!-- Zmienione -->
                         <DataGridTextColumn Header="Employee First Name" Binding="{Binding EmployeeFirstName}" />
-                        <!-- Zmienione -->
                         <DataGridTextColumn Header="Date and Time" Binding="{Binding DateTime}" />
                     </DataGrid.Columns>
                 </DataGrid>

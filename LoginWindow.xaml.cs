@@ -40,7 +40,7 @@ namespace FitnessClub
             if (employeeId != -1)
             {
                 UserSession.CurrentEmployeeId = employeeId; // Setting up employee id after login
-                MessageBox.Show("Login succesfull!");
+                //MessageBox.Show("Login succesfull!");
 
                 // Switching windows from login to main
                 var mainWindow = new MainWindow();

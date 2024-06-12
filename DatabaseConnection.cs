@@ -16,12 +16,15 @@ namespace FitnessClub
 {
     internal class DatabaseConnection
     {
+        #region db Connection
         private string connectionString = "Host=localhost;Username=postgres;Password=1234;Database=FitnessClub";
 
         public DatabaseConnection()
         {
             connectionString = ConfigurationManager.ConnectionStrings["PostgreSqlConnectionString"].ConnectionString;
         }
+        #endregion
+        #region db Clients and Pass
 
         // <summary>
         /// Authenticates an employee from the database.
@@ -59,6 +62,7 @@ namespace FitnessClub
 
             return -1; // If login went wrong, return -1
         }
+
         /// <summary>
         /// Adds a new client to the database.
         /// </summary>
@@ -98,6 +102,7 @@ namespace FitnessClub
                 throw new ApplicationException("Error while connecting with database", ex);
             }
         }
+
         /// <summary>
         /// Retrieves a list of clients from the database.
         /// </summary>
@@ -140,6 +145,9 @@ namespace FitnessClub
                 throw new ApplicationException("Error while database download", ex);
             }
         }
+
+        #endregion
+        #region db WareHouse and Shop
         /// <summary>
         /// Retrieves a list of products from the database.
         /// </summary>
@@ -180,6 +188,7 @@ namespace FitnessClub
                 throw new ApplicationException("Error while retrieving products from the database", ex);
             }
         }
+
         /// <summary>
         /// Adds a new product to the database if it doesn't already exist.
         /// </summary>
@@ -251,6 +260,7 @@ namespace FitnessClub
                 }
             }
         }
+
         /// <summary>
         /// Updates a product in the database.
         /// </summary>
@@ -282,6 +292,7 @@ namespace FitnessClub
                 throw new ApplicationException("Error updating product in the database", ex);
             }
         }
+
         /// <summary>
         /// Removes a specified quantity of a product from the database.
         /// </summary>
@@ -322,6 +333,7 @@ namespace FitnessClub
                 throw new ApplicationException("Error updating product quantity in the database", ex);
             }
         }
+
         /// <summary>
         /// Checks the availability of a product in the database.
         /// </summary>
@@ -351,7 +363,12 @@ namespace FitnessClub
             }
         }
 
+        #endregion
         #region db Booking session
+        /// <summary>
+        /// Retrieves a list of employees suitable for training sessions from the database.
+        /// </summary>
+        /// <returns>A list of Employee objects representing employees suitable for training sessions.</returns>
         public List<Employee> GetEmployeesForTraining()
         {
             try
@@ -387,6 +404,10 @@ namespace FitnessClub
                 throw new ApplicationException("Error retrieving employees from the database", ex);
             }
         }
+        /// <summary>
+        /// Retrieves a list of clients suitable for training sessions from the database.
+        /// </summary>
+        /// <returns>A list of Client objects representing clients suitable for training sessions.</returns>
         public List<Client> GetClientsForTraining()
         {
             try
@@ -422,6 +443,10 @@ namespace FitnessClub
                 throw new ApplicationException("Error retrieving clients from the database", ex);
             }
         }
+        /// <summary>
+        /// Retrieves a list of available trainings from the database.
+        /// </summary>
+        /// <returns>A list of Training objects representing available trainings.</returns>
         public List<Training> GetTrainings()
         {
             try
@@ -456,6 +481,14 @@ namespace FitnessClub
                 throw new ApplicationException("Error retrieving trainings from the database", ex);
             }
         }
+        /// <summary>
+        /// Books a training session in the database.
+        /// </summary>
+        /// <param name="trainingId">The ID of the training.</param>
+        /// <param name="clientId">The ID of the client.</param>
+        /// <param name="employeeId">The ID of the employee.</param>
+        /// <param name="date">The date and time of the training session.</param>
+        /// <returns>True if the booking was successful, otherwise false.</returns>
         public bool BookTrainingSession(int trainingId, int clientId, int employeeId, DateTime date)
         {
             try
@@ -483,7 +516,10 @@ namespace FitnessClub
                 throw new ApplicationException("Error booking training session in the database", ex);
             }
         }
-        #endregion  
+        /// <summary>
+        /// Retrieves a list of training sessions from the database.
+        /// </summary>
+        /// <returns>A list of TrainingSession objects representing training sessions.</returns>
         public List<TrainingSession> GetTrainingSessions()
         {
             var trainingSessions = new List<TrainingSession>();
@@ -509,8 +545,8 @@ namespace FitnessClub
                                 Id = reader.GetInt32(0),
                                 TrainingId = reader.GetInt32(1),
                                 TrainingName = reader.GetString(2),
-                                ClientFirstName = reader.GetString(3),  // Pobranie imienia klienta
-                                EmployeeFirstName = reader.GetString(4),  // Pobranie imienia pracownika
+                                ClientFirstName = reader.GetString(3),
+                                EmployeeFirstName = reader.GetString(4),
                                 DateTime = reader.GetDateTime(5)
                             });
                         }
@@ -520,5 +556,6 @@ namespace FitnessClub
 
             return trainingSessions;
         }
+        #endregion
     }
 }

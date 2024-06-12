@@ -15,7 +15,6 @@ namespace FitnessClub
         public DateTime EndDate { get; set; }
         public int PassLength { get; set; }
         public decimal PassPrice { get; set; }
-
         public string FullName => $"{FirstName} {LastName}";
 
     }

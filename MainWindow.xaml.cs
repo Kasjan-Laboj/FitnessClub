@@ -39,6 +39,11 @@ namespace FitnessClub
         }
 
         #region ClientPass
+        /// <summary>
+        /// Handles the click event for adding a new client to the database.
+        /// Validates input for client details, calculates the end date of the pass,
+        /// adds the client to the database, clears input fields, and refreshes the client list.
+        /// </summary>
         private void AddClientButton_Click(object sender, RoutedEventArgs e)
         {
             string firstName = FirstNameTextBox.Text;
@@ -73,17 +78,26 @@ namespace FitnessClub
                 MessageBox.Show("Wystąpił błąd podczas dodawania klienta.");
             }
         }
-
+        /// <summary>
+        /// Handles the selection changed event for the pass length combo box.
+        /// Calculates the end date of the pass when the selection changes.
+        /// </summary>
         private void PassLengthComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             CalculateEndDate();
         }
-
+        /// <summary>
+        /// Handles the selected dates changed event for the start date calendar.
+        /// Calculates the end date of the pass when the start date changes.
+        /// </summary>
         private void StartDateCalendar_SelectedDatesChanged(object sender, SelectionChangedEventArgs e)
         {
             CalculateEndDate();
         }
-
+        /// <summary>
+        /// Calculates the end date of the pass based on the selected start date and pass length,
+        /// and updates the pass price accordingly.
+        /// </summary>
         private void CalculateEndDate()
         {
             if (StartDateCalendar.SelectedDate != null && int.TryParse((PassLengthComboBox.SelectedItem as ComboBoxItem)?.Content.ToString(), out int months))
@@ -117,6 +131,9 @@ namespace FitnessClub
             }
 
         }
+        /// <summary>
+        /// Clears all input fields related to adding a new client.
+        /// </summary>
         private void ClearInputFields()
         {
             FirstNameTextBox.Text = string.Empty;
@@ -126,6 +143,10 @@ namespace FitnessClub
             PassPriceTextBox.Text = string.Empty;
             EndDateTextBlock.Text = string.Empty;
         }
+        /// <summary>
+        /// Refreshes the client list by retrieving the latest clients from the database
+        /// and updating the client data grid.
+        /// </summary>
         private void RefreshClientList()
         {
             // Pobierz nową listę klientów z bazy danych
@@ -136,12 +157,20 @@ namespace FitnessClub
         }
         #endregion
         #region ClientList
+        /// <summary>
+        /// Loads clients from the database and assigns them to the data grid for display.
+        /// </summary>
         private void LoadClients()
         {
             ClientDataGrid.ItemsSource = dbConnection.GetClients();
         }
         #endregion
         #region Warehouse
+        /// <summary>
+        /// Handles the click event for adding a new product to the database.
+        /// Validates input for product name, quantity, and price, adds the product to the database,
+        /// and refreshes the product list.
+        /// </summary>
         private void AddProductButton_Click(object sender, RoutedEventArgs e)
         {
             string productName = NewProductNameTextBox.Text;
@@ -178,7 +207,11 @@ namespace FitnessClub
                     MessageBox.Show("Failed to add product.");
             }
         }
-
+        /// <summary>
+        /// Handles the click event for adding quantity to a selected product.
+        /// Validates input for quantity, updates the product quantity in the database,
+        /// and refreshes the product list.
+        /// </summary>
         private void AddQuantityButton_Click(object sender, RoutedEventArgs e)
         {
             if (ProductDataGrid.SelectedItem is Product selectedProduct)
@@ -200,7 +233,11 @@ namespace FitnessClub
                 MessageBox.Show("Please select a product.");
             }       
         }
-
+        /// <summary>
+        /// Handles the click event for removing quantity from a selected product.
+        /// Validates input for quantity, updates the product quantity in the database,
+        /// and refreshes the product list.
+        /// </summary>
         private void RemoveQuantityButton_Click(object sender, RoutedEventArgs e)
         {
             if (ProductDataGrid.SelectedItem is Product selectedProduct)
@@ -222,7 +259,10 @@ namespace FitnessClub
                 MessageBox.Show("Please select a product.");
             }
         }
-
+        /// <summary>
+        /// Refreshes the product list by retrieving the latest products from the database
+        /// and updating the product combo box.
+        /// </summary>
         private void RefreshProductList()
         {
             List<Product> productList = dbConnection.GetProducts();
@@ -232,17 +272,24 @@ namespace FitnessClub
 
         #endregion
         #region Shop 
-
+        /// <summary>
+        /// List to hold products added to the shopping cart.
+        /// </summary>
         private List<Product> productsInCart = new List<Product>();
-    
 
+        /// <summary>
+        /// Refreshes the shopping cart by updating the data grid with the products in the cart
+        /// and recalculating the total price.
+        /// </summary>
         private void RefreshCart()
         {
             CartDataGrid.ItemsSource = null;
             CartDataGrid.ItemsSource = productsInCart;
             CalculateTotalPrice();
         }
-
+        /// <summary>
+        /// Calculates the total price of all products in the shopping cart and updates the TotalPriceTextBlock.
+        /// </summary>
         private void CalculateTotalPrice()
         {
             decimal totalPrice = 0;
@@ -291,7 +338,9 @@ namespace FitnessClub
             // Refreshing total price
             TotalPriceTextBlock.Text = "0";
         }
-
+        /// <summary>
+        /// Handles the click event for removing a product from the shopping cart.
+        /// </summary>
         private void RemoveFromCartButton_Click(object sender, RoutedEventArgs e)
         {
             // Take choosen product from cart
@@ -303,7 +352,10 @@ namespace FitnessClub
             // Refresh view
             RefreshCart();
         }
-
+        /// <summary>
+        /// Handles the TextChanged event for the quantity text box.
+        /// Updates the quantity of the selected product in the cart and refreshes the cart view.
+        /// </summary>
         private void QuantityTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (CartDataGrid.SelectedItem is Product selectedProduct)
@@ -315,7 +367,10 @@ namespace FitnessClub
                 }
             }
         }
-
+        /// <summary>
+        /// Handles the click event for adding a product to the shopping cart.
+        /// Checks the availability of the selected product, sets its quantity, and adds it to the cart.
+        /// </summary>
         private void AddToCartButton_Click(object sender, RoutedEventArgs e)
         {
             if (ProductComboBox.SelectedItem is Product selectedProduct)
@@ -352,6 +407,10 @@ namespace FitnessClub
         }
         #endregion
         #region Booking session
+        /// <summary>
+        /// Loads booking data such as employees, clients, and trainings from the database
+        /// and populates the respective ComboBoxes.
+        /// </summary>
         private void LoadBookingData()
         {
             try
@@ -376,7 +435,11 @@ namespace FitnessClub
                 MessageBox.Show($"Error loading booking data: {ex.Message}");
             }
         }
-        
+        /// <summary>
+        /// Handles the button click event for booking a training session.
+        /// Validates selected fields from ComboBoxes and DatePicker,
+        /// adds a new training session to the database, and refreshes the training sessions data grid.
+        /// </summary>
         private void BookTrainingSession_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -422,7 +485,9 @@ namespace FitnessClub
 
         #endregion
         #region ListOfTrainings 
-        
+        /// <summary>
+        /// Loads the training sessions from the database and assigns them to the data grid.
+        /// </summary>
         private void LoadTrainingSessions()
         {
             var trainingSessions = dbConnection.GetTrainingSessions();

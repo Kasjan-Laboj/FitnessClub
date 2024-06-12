@@ -406,6 +406,8 @@ namespace FitnessClub
                     ClientComboBox.SelectedIndex = -1;
                     EmployeeComboBox.SelectedIndex = -1;
                     TrainingDatePicker.SelectedDate = null;
+
+                    LoadTrainingSessions();
                 }
                 else
                 {
@@ -417,6 +419,7 @@ namespace FitnessClub
                 MessageBox.Show($"An error occurred: {ex.Message}");
             }
         }
+
         #endregion
         #region ListOfTrainings 
         

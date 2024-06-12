@@ -189,9 +189,10 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="ID" Binding="{Binding Id}" />
                         <DataGridTextColumn Header="Training Name" Binding="{Binding TrainingName}" />
+                        <DataGridTextColumn Header="Client First Name" Binding="{Binding ClientFirstName}" />
                         <!-- Zmienione -->
-                        <DataGridTextColumn Header="Client ID" Binding="{Binding ClientId}" />
-                        <DataGridTextColumn Header="Employee ID" Binding="{Binding EmployeeId}" />
+                        <DataGridTextColumn Header="Employee First Name" Binding="{Binding EmployeeFirstName}" />
+                        <!-- Zmienione -->
                         <DataGridTextColumn Header="Date and Time" Binding="{Binding DateTime}" />
                     </DataGrid.Columns>
                 </DataGrid>

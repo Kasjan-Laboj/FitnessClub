@@ -10,9 +10,9 @@ namespace FitnessClub
     {
         public int Id { get; set; }
         public int TrainingId { get; set; }
-        public string TrainingName { get; set; }  // Nowa właściwość
-        public int ClientId { get; set; }
-        public int EmployeeId { get; set; }
+        public string TrainingName { get; set; }
+        public string ClientFirstName { get; set; }  // Nowa właściwość
+        public string EmployeeFirstName { get; set; }  // Nowa właściwość
         public DateTime DateTime { get; set; }
     }
 }

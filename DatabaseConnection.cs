@@ -488,14 +488,15 @@ namespace FitnessClub
         {
             var trainingSessions = new List<TrainingSession>();
 
-
             using (var connection = new NpgsqlConnection(connectionString))
             {
                 connection.Open();
                 string query = @"
-            SELECT ts.id, ts.training_id, t.name as training_name, ts.client_id, ts.employee_id, ts.date_time
+            SELECT ts.id, ts.training_id, t.name as training_name, c.firstname as client_firstname, e.firstname as employee_firstname, ts.date_time
             FROM public.training_sessions ts
-            JOIN public.trainings t ON ts.training_id = t.id";
+            JOIN public.trainings t ON ts.training_id = t.id
+            JOIN public.clients c ON ts.client_id = c.id
+            JOIN public.employees e ON ts.employee_id = e.id";
 
                 using (var command = new NpgsqlCommand(query, connection))
                 {
@@ -507,9 +508,9 @@ namespace FitnessClub
                             {
                                 Id = reader.GetInt32(0),
                                 TrainingId = reader.GetInt32(1),
-                                TrainingName = reader.GetString(2), // Pobranie nazwy treningu
-                                ClientId = reader.GetInt32(3),
-                                EmployeeId = reader.GetInt32(4),
+                                TrainingName = reader.GetString(2),
+                                ClientFirstName = reader.GetString(3),  // Pobranie imienia klienta
+                                EmployeeFirstName = reader.GetString(4),  // Pobranie imienia pracownika
                                 DateTime = reader.GetDateTime(5)
                             });
                         }

@@ -265,9 +265,10 @@ namespace FitnessClub
         /// </summary>
         private void RefreshProductList()
         {
+            DatabaseConnection dbConnection = new DatabaseConnection();
             List<Product> productList = dbConnection.GetProducts();
-            ProductComboBox.ItemsSource = productList;
-            ProductComboBox.DisplayMemberPath = "Name";
+            productList.Sort((x, y) => x.Id.CompareTo(y.Id));
+            ProductDataGrid.ItemsSource = productList;
         }
 
         #endregion
